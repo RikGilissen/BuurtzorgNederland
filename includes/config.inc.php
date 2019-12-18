@@ -14,7 +14,7 @@
     //$rootfolder = "/wilmesjeroen/versie2.0/";
     //$rootfolder = "/pagebuilder24/";
     //$rootfolder = "https://buurtzorg.eriksteens.nl/";
-    $rootfolder = "/buurtzorg24/buurtzorg24-1/";
+    $rootfolder = "/buurtzorgnederland/";
 
     // url:  /PAGE/ACTION/PARAM
 
@@ -37,4 +37,3 @@
 	define("JS_PATH"		    , ROOT 			. "js/");
 	define("PAGES_PATH"			, ROOT			. "pages/");
 	define("INTERFACES_PATH"	, ROOT			. "interfaces/");
-
