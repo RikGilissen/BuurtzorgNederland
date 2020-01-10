@@ -8,7 +8,7 @@
 	// called by pagebuilder.inc.php init method
 	// only one implementation so abstract implementation
 	abstract class Login {
-		
+
 		// create login form with hidden name frmLogin to be processed in this->checkCredentials()
 		public static function getLoginForm() {
 			$form = "<h3>". PAGE ."</h3><br>";
