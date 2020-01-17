@@ -28,7 +28,7 @@
 				}
 			} else { // no ACTION so normal page
 				$table 	= $this->getData();		// get users from database in tableform
-				$button = $this->addButton("/create", "Toevoegen");	// add "/add" button. This is ACTION button
+				$button = $this->addButton("/create", "Gebruiker toevoegen");	// add "/add" button. This is ACTION button
 				// first show button, then table
 				$html = $button . "<br />" . $table;
 				return $html;

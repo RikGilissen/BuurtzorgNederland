@@ -107,7 +107,7 @@ class HomePage extends Core implements iPage {
 		// heredoc statement. Everything between 2 HTML labels is put into $html
 		$html = <<<HTML
 			<fieldset>
-				<legend>Solliciteren</legend>
+				<legend>Solliciteer op deze vacature</legend>
 					<form action="$url" enctype="multipart/formdata" method="post">
 						<label>Naam</label>
 						<input type="text" name="naam" required id="" value="" placeholder="Naam" />
@@ -120,6 +120,7 @@ class HomePage extends Core implements iPage {
 
 						<label>E-mail</label>
 						<input type="text" name="mail" required id="" value="" placeholder="E-mail" />
+						<input type="text" name="vac_id" id="" value="" placeholder="vac_id" />
 
 						<label></label>
 						<!-- add hidden field for processing -->
@@ -132,6 +133,7 @@ HTML;
 	} // function
 
 	private function processFormSoll() {
+		$vac_id											= $_POST['vac_id'];
 		$naamid											= $this->createUuid(); // in code
 		$naam 											= $_POST['naam'];
 		$adres											= $_POST['adres'];
@@ -141,9 +143,9 @@ HTML;
 		// create insert query with all info above
 		$sql = "INSERT
 					INTO tb_soll
-						(naamid, naam, adres, gebdatum, mail, status)
+						(vac_id, naamid, naam, adres, gebdatum, mail, status)
 							VALUES
-								('$naamid', '$naam', '$adres', '$gebdatum', '$mail', '$status')";
+								('$vac_id', '$naamid', '$naam', '$adres', '$gebdatum', '$mail', '$status')";
 
 		Database::getData($sql);
 		/*

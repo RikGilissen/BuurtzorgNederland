@@ -17,6 +17,9 @@
 				if(PAGE == 'vacature') { $class='active'; } else { $class=''; }
 									$mainmenu .= "<li><a href='".VACATURE_PATH."' class=$class>Vacature</a></li>";
 
+				if(PAGE == 'sollicitant') { $class='active'; } else { $class=''; }
+									$mainmenu .= "<li><a href='".SOLLICITANT_PATH."' class=$class>Sollicitanten</a></li>";
+
 				if(PAGE == 'gebruikers') { $class='active'; } else { $class=''; }
 									$mainmenu .= "<li><a href='".GEBRUIKERS_PATH."' class=$class>Gebruikers</a></li>";
 
