@@ -14,11 +14,14 @@
 				if(PAGE == 'home') { $class='active'; } else { $class=''; }
 	            $mainmenu .= "<li><a href='".HOME_PATH."' class=$class>Home</a></li>";
 
-				if(PAGE == 'vacature') { $class='active'; } else { $class=''; }
-									$mainmenu .= "<li><a href='".VACATURE_PATH."' class=$class>Vacature</a></li>";
+				if(PAGE == 'WTV') { $class='active'; } else { $class=''; }
+									$mainmenu .= "<li><a href='".WTV_PATH."' class=$class>WTV</a></li>";
 
-				if(PAGE == 'sollicitant') { $class='active'; } else { $class=''; }
-									$mainmenu .= "<li><a href='".SOLLICITANT_PATH."' class=$class>Sollicitanten</a></li>";
+				if(PAGE == 'PZ') { $class='active'; } else { $class=''; }
+									$mainmenu .= "<li><a href='".PZ_PATH."' class=$class>PZ</a></li>";
+
+				if(PAGE == 'teamlid') { $class='active'; } else { $class=''; }
+									$mainmenu .= "<li><a href='".TEAMLID_PATH."' class=$class>Teamlid</a></li>";
 
 				if(PAGE == 'gebruikers') { $class='active'; } else { $class=''; }
 									$mainmenu .= "<li><a href='".GEBRUIKERS_PATH."' class=$class>Gebruikers</a></li>";

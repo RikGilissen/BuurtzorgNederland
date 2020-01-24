@@ -15,15 +15,16 @@
     //$rootfolder = "/pagebuilder24/";
     //$rootfolder = "https://buurtzorg.eriksteens.nl/";
     $rootfolder = "/steenserik/207329/buurtzorgnederland/";
-		// Mady by Rik Gilissen 
+
     // url:  /PAGE/ACTION/PARAM
 
     define("ROOT"			    , "");
 
     //Menuitems paths
     define("HOME_PATH"           	 , $rootfolder . ROOT . "home");
-    define("VACATURE_PATH"      	 , $rootfolder . ROOT . "vacature");
-		define("SOLLICITANT_PATH"      , $rootfolder . ROOT . "sollicitant");
+    define("WTV_PATH"      	 			 , $rootfolder . ROOT . "WTV");
+		define("PZ_PATH"      				 , $rootfolder . ROOT . "PZ");
+		define("TEAMLID_PATH"					 , $rootfolder . ROOT . "teamlid");
     define("GEBRUIKERS_PATH"    	 , $rootfolder . ROOT . "gebruikers");
     define("GEHEIM_PATH"        	 , $rootfolder . ROOT . "geheim");
     define("LOGOUT_PATH"         	 , $rootfolder . ROOT . "logout");

@@ -14,8 +14,9 @@
 		public static function checkPage() {
 			switch(PAGE) {
 				case "home"						:	return false; break;
-				case "vacature"				: return true; break;
-				case "sollicitant"		: return true; break;
+				case "WTV"						: return true; break;
+				case "PZ"							: return true; break;
+				case "teamlid"				: return true; break;
 				case "admin"					: return true; break;
 				case "gebruikers"			: return true; break;
 				case "geheim" 				: return true; break;
