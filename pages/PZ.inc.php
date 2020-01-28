@@ -111,7 +111,7 @@
 		//cr[U]d action
 		private function update() {
 			// present form with all user information editable and process
-			$button = $this->addButton("/../..", "Terug");
+			$button = $this->addButton("/../../../../../.." . PZ_PATH , "Terug");
 			// first show button, then table
 
       $sql = 'UPDATE tb_soll

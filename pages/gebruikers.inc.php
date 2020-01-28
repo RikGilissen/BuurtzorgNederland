@@ -23,14 +23,17 @@
 					// get html for the required action
 					case "create"	: return $this->create(); break;
 					case "read"		: return $this->read(); break;
-					case "update"	: return $this->update();break;
 					case "delete"	: return $this->delete();
 				}
-			} else { // no ACTION so normal page
+			} elseif($_SESSION['user']['role'] == ROLE_ADMIN) { // no ACTION so normal page
 				$table 	= $this->getData();		// get users from database in tableform
 				$button = $this->addButton("/create", "Gebruiker toevoegen");	// add "/add" button. This is ACTION button
 				// first show button, then table
-				$html = $button . "<br />" . $table;
+				$html = "<h1> Welkom " . $_SESSION['user']['username'] . " </h1>" . "<br/>" . $button . "<br/>" . $table;
+				return $html;
+			} else {
+				$table 	= $this->getData();		// get users from database in tableform
+				$html = "<h1> Welkom " . $_SESSION['user']['username'] . " </h1>" . "<br/>" . "<h3>Alleen de admin kan gebruikers aanmaken en verwijderen</h3>" . "<br/>" . $table;
 				return $html;
 			}
 		}
@@ -65,6 +68,7 @@
 		} // end function getData()
 
 		private function createTable($p_aDbResult){ // create html table from dbase result
+			if ($_SESSION['user']['role'] == ROLE_ADMIN) {
 			$image = "<img src='".ICONS_PATH."noun_information user_24px.png' />";
 			$table = "<table border='1'>";
 				$table .= "	<th>uuid</th>
@@ -76,9 +80,8 @@
 							<th>Hash</th>
 							<th>Hashdatum</th>
 							<th>Timestamp</th>
-							<th>Bekijk</th>
-							<th>Verwijder</th>
-							<th>Aanpassen</th>";
+							<th>Bekijken</th>
+							<th>Verwijderen</th>";
 				// now process every row in the $dbResult array and convert into table
 				foreach ($p_aDbResult as $row){
 					$table .= "<tr>";
@@ -98,16 +101,44 @@
 								. "/delete/" . $row["uuid"] 	// add ACTION and PARAM to the link
 								. ">$image</a></td>";			// link to delete icon
 						// create new link with parameter (== update)
-						$table 	.= "<td><a href="
-								. $url 							// current menu
-								. "/update/" . $row["uuid"] 	// add ACTION and PARAM to the link
-								. ">$image</a></td>";			// link to delete icon
 					$table .= "</tr>";
 
 				} // foreach
 			$table .= "</table>";
 			return $table;
-		} //function
+		} else {
+			$image = "<img src='".ICONS_PATH."noun_information user_24px.png' />";
+			$table = "<table border='1'>";
+				$table .= "	<th>uuid</th>
+							<th>Inlognaam</th>
+							<th>Wachtwoord</th>
+							<th>E-mailadres</th>
+							<th>Rechten</th>
+							<th>Status</th>
+							<th>Hash</th>
+							<th>Hashdatum</th>
+							<th>Timestamp</th>
+							<th>Bekijken</th>";
+				// now process every row in the $dbResult array and convert into table
+				foreach ($p_aDbResult as $row){
+					$table .= "<tr>";
+						foreach ($row as $col) {
+							$table .= "<td>" . $col . "</td>";
+						}
+	                    // calculate url and trim all parameters [0..9]
+	                    $url = rtrim($_SERVER['REQUEST_URI'],"/[0..9]");
+						// create new link with parameter (== edit user link!)
+						$table 	.= "<td><a href="
+								. $url 							// current menu
+								. "/read/" . $row["uuid"] 	// add ACTION and PARAM to the link
+								. ">$image</a></td>";			// link to edit icon
+					$table .= "</tr>";
+
+				} // foreach
+			$table .= "</table>";
+			return $table;
+			}
+		}//function
 
 		// [C]rud action
 		// based on sent form 'frmAddUser' fields
@@ -142,6 +173,7 @@
 
 							<label></label>
 							<!-- add hidden field for processing -->
+							<input type="hidden" name="status" value="" />
 							<input type="hidden" name="frmAddUser" value="frmAddUser" />
 							<input type="submit" name="submit" value="Gebruiker toevoegen" />
 						</form>
@@ -156,16 +188,17 @@ HTML;
 			$hashDate 	= $this->createHashDate(); // in core
 			// get transfered datafields from form "$this->addForm()"
 
-			$username 	= $_POST['loginname'];
-			$password	= password_hash($_POST['password'], PASSWORD_DEFAULT);
-			$role		= $_POST['role'];
-			$email		= $_POST['email'];
+		  $username		= $_POST['loginname'];
+			$password		= password_hash($_POST['password'], PASSWORD_DEFAULT);
+			$role				= $_POST['role'];
+			$email			= $_POST['email'];
+			$status 		= "1";
 			// create insert query with all info above
 			$sql = "INSERT
 						INTO tb_users
-							(uuid, username, password, email, role, hash, hash_date)
+							(uuid, username, password, email, role, status, hash, hash_date)
 								VALUES
-									('$uuid', '$username', '$password', '$email', '$role', '$hash', '$hashDate')";
+									('$uuid', '$username', '$password', '$email', '$role', '$status', '$hash', '$hashDate')";
 
 			Database::getData($sql);
 			/*
@@ -178,32 +211,53 @@ HTML;
 		} //function
 
 		// c[R]ud action
+		private function getDataUser(){
+			// execute a query and return the result
+			$sql='SELECT * FROM tb_users WHERE uuid = "'. PARAM . '"';
+						$result = $this->createTableUser(Database::getData($sql));
+
+			return $result;
+		} // end function getData()
+
+		private function createTableUser($p_aDbResult){ // create html table from dbase result
+			$image = "<img src='".ICONS_PATH."noun_information user_24px.png' />";
+			$table = "<table border='1'>";
+				$table .= "<th>UUID</th>
+							<th>Inlognaam</th>
+							<th>Wachtwoord</th>
+							<th>E-mailadres</th>
+							<th>Rol</th>
+							<th>Status</th>
+							<th>Hash</th>
+							<th>Hashdatum</th>
+							<th>Timestamp</th>";
+				// now process every row in the $dbResult array and convert into table
+				foreach ($p_aDbResult as $row){
+					$table .= "<tr>";
+						foreach ($row as $col) {
+							$table .= "<td>" . $col . "</td>";
+						}
+				} // foreach
+			$table .= "</table>";
+			return $table;
+		} //function
 		private function read() {
-			// get and present information from the user with uuid in PARAM
-			$button = $this->addButton("/../..", "Terug");
+			$tableUser = $this->getDataUser();
+			$button = $this->addButton("/../../../../../.." . GEBRUIKERS_PATH , "Terug");
 			// first show button, then table
 
-			return $button ."<br>Dit zijn de details van vacature " . PARAM;
+			return "<h1>Dit zijn de details van gebruiker " . PARAM . "</h1>" . "<br/>" . $tableUser . "<br/>" . $button ;
 		} // function details
-
-		//cr[U]d action
-		private function update() {
-			// present form with all user information editable and process
-			$button = $this->addButton("/../..", "Terug");
-			// first show button, then table
-
-			return $button ."<br>Momenteel wordt " . PARAM . " aangepast";
-		}
 
 		//cru[D] action
 		private function delete() {
 			// remove selected record based om uuid in PARAM
 			$sql='DELETE FROM tb_users WHERE uuid="' . PARAM. '"';
             $result = Database::getData($sql);
-			$button = $this->addButton("/../../..", "Terug");	// add "/add" button. This is ACTION button
+			$button = $this->addButton("/../../../../../.." . GEBRUIKERS_PATH , "Terug");	// add "/add" button. This is ACTION button
 			// first show button, then table
 
-			return $button ."<br>Vacature " . PARAM . " is verwijdert";
+			return $button ."<br>Gebruiker " . PARAM . " is verwijdert";
 		}
 	}// class gebruikerPage
 ?>

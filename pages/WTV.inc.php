@@ -18,7 +18,6 @@ class WTVPage extends Core implements iPage{
 				// get html for the required action
 				case "create"			: return $this->create(); break;
 				case "read"				: return $this->read(); break;
-				case "update"			: return $this->update();break;
 				case "updateSoll"	: return $this->updateSoll();break;
 				case "delete"			: return $this->delete();
 			}
@@ -73,9 +72,8 @@ class WTVPage extends Core implements iPage{
 									<th>Vacature titel</th>
 									<th>Vacature tekst</th>
 									<th>Wijkteamverantwoordige id</th>
-									<th>Bekijk</th>
-									<th>Verwijder</th>
-									<th>Aanpassen</th>";
+									<th>Bekijken</th>
+									<th>Verwijderen</th>";
 			// now process every row in the $dbResult array and convert into table
 			foreach ($p_aDbResult as $row){
 				$table .= "<tr>";
@@ -95,10 +93,6 @@ class WTVPage extends Core implements iPage{
 							. "/delete/" . $row["vac_id"] 	// add ACTION and PARAM to the link
 							. ">$image</a></td>";			// link to delete icon
 					// create new link with parameter (== update)
-					$table 	.= "<td><a href="
-							. $url 							// current menu
-							. "/update/" . $row["vac_id"] 	// add ACTION and PARAM to the link
-							. ">$image</a></td>";			// link to delete icon
 				$table .= "</tr>";
 
 			} // foreach
@@ -111,7 +105,7 @@ class WTVPage extends Core implements iPage{
 						<th>Vacature titel</th>
 						<th>Vacature tekst</th>
 						<th>Wijkteamverantwoordige id</th>
-						<th>Bekijk</th>";
+						<th>Bekijken</th>";
 			// now process every row in the $dbResult array and convert into table
 			foreach ($p_aDbResult as $row){
 				$table .= "<tr>";
@@ -130,7 +124,7 @@ class WTVPage extends Core implements iPage{
 			} // foreach
 		$table .= "</table>";
 		return $table;
-	}
+		}
 	} //function
 
 	private function getDataSoll(){
@@ -241,32 +235,50 @@ HTML;
 			echo $hashDate . "<br />";
 		*/
 
-		$button = $this->addButton("/../../", "Terug");
+		$button = $this->addButton("/../../../../../.." . WTV_PATH , "Terug");
 
 		return $button . "<br>De vacature is toegevoegd.";
 	} //function
 
 	// c[R]ud action
+	private function getDataVac(){
+		// execute a query and return the result
+		$sql='SELECT * FROM tb_vacature WHERE vac_id = "'. PARAM . '"';
+					$result = $this->createTableVac(Database::getData($sql));
+
+		return $result;
+	} // end function getData()
+
+	private function createTableVac($p_aDbResult){ // create html table from dbase result
+		$image = "<img src='".ICONS_PATH."noun_information user_24px.png' />";
+		$table = "<table border='1'>";
+			$table .= "<th>Vacature id</th>
+						<th>Vacature titel</th>
+						<th>Vacature tekst</th>
+						<th>wijkteamverantwoordige ID</th>";
+			// now process every row in the $dbResult array and convert into table
+			foreach ($p_aDbResult as $row){
+				$table .= "<tr>";
+					foreach ($row as $col) {
+						$table .= "<td>" . $col . "</td>";
+					}
+			} // foreach
+		$table .= "</table>";
+		return $table;
+	} //function
+
 	private function read() {
-		// get and present information from the user with uuid in PARAM
-		$button = $this->addButton("/../../../", "Terug");
+		$tableVac 	= $this->getDataVac();
+		$button = $this->addButton("/../../../../../.." . WTV_PATH , "Terug");
 		// first show button, then table
 
-		return $button ."<br>Dit zijn de details van " . PARAM;
+		return "<h1>Dit zijn de details van vacature " . PARAM . "</h1>" . "<br/>" . $tableVac . "<br/>" . $button ;
 	} // function details
 
 	//cr[U]d action
-	private function update() {
-		// present form with all user information editable and process
-		$button = $this->addButton("/../../../", "Terug");
-		// first show button, then table
-
-		return $button ."<br>" .  "Vacature " . PARAM . " wordt momenteel aangepast";
-	}
-
 	private function updateSoll() {
 		// present form with all user information editable and process
-		$button = $this->addButton("/../../../", "Terug");
+		$button = $this->addButton("/../../../../../.." . WTV_PATH , "Terug");
 
 		$sql = 'UPDATE tb_soll
 					SET status = 5
@@ -283,9 +295,9 @@ HTML;
 		// remove selected record based om uuid in PARAM
 		$sql='DELETE FROM tb_vacature WHERE vac_id="' . PARAM. '"';
 					$result = Database::getData($sql);
-		$button = $this->addButton("/../../../", "Terug");	// add "/add" button. This is ACTION button
+		$button = $this->addButton("/../../../../../.." . WTV_PATH , "Terug");	// add "/add" button. This is ACTION button
 		// first show button, then table
 
-		return $button ."<br>Vacature " . PARAM . " is verwijderd";
+		return $button ."<br>Vacature " . PARAM . " is verwijdert";
 	}
 }// class vacaturePage

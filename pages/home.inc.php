@@ -157,7 +157,35 @@ HTML;
 	} //function
 
 	// c[R]ud action
+	private function getDataVac(){
+		// execute a query and return the result
+		$sql='SELECT vac_id, vac_titel, vac_tekst FROM tb_vacature WHERE vac_id = "'. PARAM . '"';
+					$result = $this->createTableVac(Database::getData($sql));
+
+		return $result;
+	} // end function getData()
+
+	private function createTableVac($p_aDbResult){ // create html table from dbase result
+		$image = "<img src='".ICONS_PATH."noun_information user_24px.png' />";
+		$table = "<table border='1'>";
+			$table .= "<th>Vacature id</th>
+						<th>Vacature titel</th>
+						<th>Vacature tekst</th>";
+			// now process every row in the $dbResult array and convert into table
+			foreach ($p_aDbResult as $row){
+				$table .= "<tr>";
+					foreach ($row as $col) {
+						$table .= "<td>" . $col . "</td>";
+					}
+			} // foreach
+		$table .= "</table>";
+		return $table;
+	} //function
+
 	private function read() {
-		return "<br>Dit zijn de details van vacature " . PARAM;
+		$tableVac 	= $this->getDataVac();
+		$button = $this->addButton("/../../../../../.." . HOME_PATH , "Terug");
+
+		return "<h1>Dit zijn de details van vacature " . PARAM . "</h1>" . "<br/>" . $tableVac . "<br/>" . $button;
 	} // function details
 }// class homePage
